@@ -1,31 +1,40 @@
-function TaskItem({ task, dispatch }) {
-  const handleToggle = () => {
-    dispatch({ type: "TOGGLE_TASK", id: task.id });
-  };
-
-  const handleDelete = () => {
-    dispatch({ type: "DELETE_TASK", id: task.id });
-  };
-
-  const formattedDate = task.dueDate
-    ? new Date(task.dueDate).toLocaleDateString()
-    : null;
-
+function TaskItem({ task, onToggleTask, onDeleteTask }) {
   return (
-    <li className={`task-item ${task.done ? "done" : ""}`}>
-      <input
-        type="checkbox"
-        checked={task.done}
-        onChange={handleToggle}
-      />
-      <div className="task-content">
-        <span className="task-text">{task.text}</span>
-        <div className="task-meta">
-          {task.assignedTo && <span>Asignado a: {task.assignedTo}</span>}
-          {formattedDate && <span>Fecha límite: {formattedDate}</span>}
+    <li className="task-item">
+      <div style={{ flex: 1 }}>
+        <div>
+          <span
+            style={{
+              textDecoration: task.done ? "line-through" : "none",
+              fontWeight: 500,
+            }}
+          >
+            {task.titulo}
+          </span>
+          <span className="badge" style={{ marginLeft: "1rem" }}>
+            Vence: {task.fecha_limite}
+          </span>
+          <span className="badge" style={{ marginLeft: "0.5rem" }}>
+            {task.usuario?.nombre || 'Sin asignar'}
+          </span>
         </div>
+        {task.descripcion && (
+          <div className="task-description">
+            {task.descripcion}
+          </div>
+        )}
       </div>
-      <button onClick={handleDelete}>Eliminar</button>
+      <div>
+        <button onClick={() => onToggleTask(task.id, task.done)}>
+          {task.done ? "Desmarcar" : "Completar"}
+        </button>
+        <button
+          className="eliminar"
+          onClick={() => onDeleteTask(task.id)}
+        >
+          Eliminar
+        </button>
+      </div>
     </li>
   );
 }
